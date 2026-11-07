@@ -1,38 +1,113 @@
 # Anti-Fake-Complete
 
-An evidence-backed workflow that makes AI agents prove what they claim to have
-built.
+> Make AI agents prove what they claim to have built.
 
-## What it does
+AI coding agents often report “done” after writing code, even when requested
+behavior was not tested, an integration was never exercised, or a required
+check was skipped. Anti-Fake-Complete provides a framework-agnostic skill and
+small command-line tools for making completion claims proportional to evidence.
 
-Prevents an agent from claiming that work is complete without matching evidence.
-It defines evidence levels, requires every acceptance criterion to be mapped to
-validation, and reports unverified limitations explicitly.
+## What is included
 
-The skill is framework-agnostic and can be copied into a project at:
+- `SKILL.md`: an on-demand workflow for agents.
+- Evidence levels from planned through production-observed.
+- A machine-readable completion report validator.
+- A dependency-free secret scanner for common credential patterns.
+- Node.js tests and GitHub Actions CI.
 
-```text
-.github/skills/anti-fake-complete/
+## Quick start
+
+Requirements: Node.js 20 or newer.
+
+```bash
+git clone https://github.com/ardianwn/anti-fake-complete.git
+cd anti-fake-complete
+npm test
+npm run secret-scan
+node skills/anti-fake-complete/scripts/validate-report.mjs \
+  skills/anti-fake-complete/examples/verified-feature.json
 ```
 
-## Validate
+## Install the skill
+
+Copy `skills/anti-fake-complete/` into a project-specific skill directory:
+
+```bash
+mkdir -p .github/skills
+cp -R skills/anti-fake-complete .github/skills/anti-fake-complete
+```
+
+The same directory can be used by agents that support `.agents/skills/` or
+`.claude/skills/`. See the target agent's documentation for its skill path.
+
+## Evidence model
+
+| Level | Meaning |
+|---|---|
+| L0 | Planned |
+| L1 | Implemented and reviewed |
+| L2 | Static checks passed |
+| L3 | Focused unit tests passed |
+| L4 | Integration boundary tested |
+| L5 | Runtime/device/deployed endpoint verified |
+| L6 | Production behavior observed |
+
+“Verified” is not a synonym for “code exists”. A lint pass cannot prove runtime
+behavior, and a unit test cannot prove a device or provider integration unless
+that boundary is exercised.
+
+## Completion reports
+
+Reports contain a status, acceptance criteria, minimum evidence level, commands,
+and observed results:
+
+```json
+{
+  "status": "verified",
+  "criteria": [
+    {
+      "id": "save-value",
+      "description": "The feature saves a value",
+      "minimumEvidenceLevel": 3,
+      "evidence": [
+        {
+          "level": 3,
+          "command": "npm test -- save-value",
+          "result": "1 test passed"
+        }
+      ]
+    }
+  ]
+}
+```
+
+Use `partial`, `unverified`, or `failed` when evidence does not justify a
+stronger claim. Never invent output, coverage, deployment status, or provider
+availability.
+
+## Project checks
 
 ```bash
 npm test
-node skills/anti-fake-complete/scripts/validate-report.mjs \
-  skills/anti-fake-complete/examples/verified-feature.json
 npm run secret-scan
 ```
 
-The validator uses only Node.js built-ins.
-The bundled secret scanner also uses only Node.js built-ins and fails closed
-when it finds common private-key, token, or hard-coded secret patterns.
+All tools use Node.js built-ins and do not send source code or credentials to a
+third party. The scanner is a heuristic guardrail, not a replacement for a
+provider or organization secret-scanning service.
 
-## Design principles
+## Scope and limitations
 
-- Implemented is not the same as verified.
-- A passing test is evidence only for what it actually exercises.
-- Unknown or skipped validation must remain visible.
-- Completion claims must be reproducible from commands and observed results.
-- A tool must fail closed on malformed evidence instead of producing a
-  success-shaped fallback.
+This project improves reporting discipline; it cannot prove that an agent's
+acceptance criteria are complete or that a command's output is truthful. Review
+the evidence, run checks in a trusted environment, and add project-specific
+security, authorization, device, and production checks where required.
+
+## Contributing
+
+See [CONTRIBUTING.md](./CONTRIBUTING.md). Please include tests and actual
+validation output with behavior changes.
+
+## License
+
+MIT. See [LICENSE](./LICENSE).
