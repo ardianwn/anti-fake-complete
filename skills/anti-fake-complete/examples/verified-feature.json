@@ -1,0 +1,17 @@
+{
+  "status": "verified",
+  "criteria": [
+    {
+      "id": "save-value",
+      "description": "The feature saves a value",
+      "minimumEvidenceLevel": 3,
+      "evidence": [
+        {
+          "level": 3,
+          "command": "node --test tests/save-value.test.mjs",
+          "result": "1 test passed"
+        }
+      ]
+    }
+  ]
+}
