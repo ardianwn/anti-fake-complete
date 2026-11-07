@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.1.1] - 2026-11-07
+
+### Added
+
+- Rejected completion-report fixture and README failure demonstration.
+
 ## [0.1.0] - 2026-11-07
 
 ### Added

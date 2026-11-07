@@ -28,6 +28,14 @@ node skills/anti-fake-complete/scripts/validate-report.mjs \
   skills/anti-fake-complete/examples/verified-feature.json
 ```
 
+The validator rejects a claim when the evidence is too weak:
+
+```bash
+node skills/anti-fake-complete/scripts/validate-report.mjs \
+  skills/anti-fake-complete/examples/rejected-report.json
+# Invalid completion report: criterion "runtime-behavior" reaches L2, below required L5
+```
+
 ## Install the skill
 
 Copy `skills/anti-fake-complete/` into a project-specific skill directory:
@@ -102,6 +110,13 @@ This project improves reporting discipline; it cannot prove that an agent's
 acceptance criteria are complete or that a command's output is truthful. Review
 the evidence, run checks in a trusted environment, and add project-specific
 security, authorization, device, and production checks where required.
+
+## Release status
+
+`v0.1.0` is an early release suitable for evaluation and team workflows. It is
+not a guarantee that an agent is truthful, that acceptance criteria are
+complete, or that a repository is production-ready. Integrate it with trusted
+CI and project-specific runtime checks.
 
 ## Contributing
 

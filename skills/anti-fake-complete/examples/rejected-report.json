@@ -1,0 +1,17 @@
+{
+  "status": "verified",
+  "criteria": [
+    {
+      "id": "runtime-behavior",
+      "description": "The feature works at runtime",
+      "minimumEvidenceLevel": 5,
+      "evidence": [
+        {
+          "level": 2,
+          "command": "npm run lint",
+          "result": "lint passed"
+        }
+      ]
+    }
+  ]
+}
