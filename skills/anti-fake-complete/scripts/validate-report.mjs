@@ -11,6 +11,17 @@ function fail(message) {
   process.exitCode = 1;
 }
 
+function validateStatusEvidence(status, strongestLevel, minimumLevel, criterionId) {
+  if (status !== "verified") {
+    return;
+  }
+  if (strongestLevel < minimumLevel) {
+    throw new Error(
+      `criterion "${criterionId}" reaches L${strongestLevel}, below required L${minimumLevel}`,
+    );
+  }
+}
+
 function validateEvidence(evidence, criterionId) {
   if (!Array.isArray(evidence) || evidence.length === 0) {
     throw new Error(`criterion "${criterionId}" has no evidence`);
@@ -74,11 +85,12 @@ async function main() {
       validateEvidence(criterion.evidence, criterion.id);
 
       const strongestLevel = Math.max(...criterion.evidence.map((item) => item.level));
-      if (report.status === "verified" && strongestLevel < criterion.minimumEvidenceLevel) {
-        throw new Error(
-          `criterion "${criterion.id}" reaches L${strongestLevel}, below required L${criterion.minimumEvidenceLevel}`,
-        );
-      }
+      validateStatusEvidence(
+        report.status,
+        strongestLevel,
+        criterion.minimumEvidenceLevel,
+        criterion.id,
+      );
     }
   } catch (error) {
     fail(error.message);

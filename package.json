@@ -4,7 +4,8 @@
   "private": true,
   "description": "Reusable, evidence-backed agent skills",
   "scripts": {
-    "test": "node --test tests/**/*.test.mjs"
+    "test": "node --test tests/*.test.mjs",
+    "secret-scan": "node skills/anti-fake-complete/scripts/secret-scan.mjs ."
   },
   "engines": {
     "node": ">=20"

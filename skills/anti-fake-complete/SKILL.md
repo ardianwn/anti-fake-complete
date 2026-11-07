@@ -72,3 +72,12 @@ node ./scripts/validate-report.mjs ./completion-report.json
 
 The validator rejects malformed reports and completion claims whose evidence
 does not meet the minimum level.
+
+Before sharing or committing generated code, run the bundled secret scan:
+
+```bash
+node ./scripts/secret-scan.mjs .
+```
+
+Treat findings as blockers until each value is removed, replaced with an
+environment reference, or confirmed as a documented non-secret example.
